@@ -1,6 +1,6 @@
 import simulacrum._
 
-trait Functor[F[_]] {
+@typeclass trait Functor[F[_]] { self => 
   def map[A, B](fa: F[A])(f: A => B): F[B]
 
   def lift[A,B](f: A => B): F[A] => F[B] = 
@@ -11,13 +11,12 @@ trait Functor[F[_]] {
 
   def void[A](fa: F[A]): F[Unit] = 
     as(fa, ())
-}
 
-trait FunctorLaws {
-  def identity[F[_], A](fa: F[A])(implicit F: Functor[F]) = F.map(fa)(a => a) == fa
-
-  def composition[F[_], A, B, C](fa: F[A], f: A => B, g: B => C)(implicit F: Functor[F]) =
-    F.map(F.map(fa)(f))(g) == F.map(fa)(f andThen g)
+  def compose[G[_]](implicit G : Functor[G]): Functor[Lambda[X => F[G[X]]]] = 
+    new Functor[Lambda[X => F[G[X]]]] {
+      def map[A, B](fga: F[G[A]])(f: A => B): F[G[B]] =
+        self.map(fga)(ga => G.map(ga)(a => f(a)))
+    }
 }
 
 object Functor {
@@ -29,8 +28,29 @@ object Functor {
     def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa.map(f)  
   }
 
+  // Functors are type constructors of 1 argument, but Function1 is a type constructor
+  // with 2 type parameters.  We need to partially apply 1 type to the Function1 type constructor.
+
   implicit def function1Functor[X] : Functor[X => ?]  = new Functor[X => ?] {
     def map[A, B](fa: X => A)(f: A => B): X => B = fa andThen f
   }
 
+}
+
+trait FunctorLaws[F[_]] {
+  import Functor.ops._
+//  import IsEq._
+
+  implicit def F: Functor[F]
+
+  def identity[A](fa: F[A]) = F.map(fa)(a => a) == fa
+
+  def composition[A, B, C](fa: F[A], f: A => B, g: B => C) =
+    F.map(F.map(fa)(f))(g) == F.map(fa)(f andThen g)
+}
+
+object FunctorLaws {
+  def apply[F[_]](implicit F0: Functor[F]): FunctorLaws[F] = new FunctorLaws[F] {
+    def F = F0
+  }
 }
