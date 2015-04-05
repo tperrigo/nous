@@ -6,7 +6,7 @@ In particular, Nous is heavily based on the video lectures (https://www.youtube.
 presented by Michael Pilquist, author of the Structures project (https://github.com/mpilquist/Structures), though neither Michael Pilquist nor
 any members or contributors to Structures endorse or are in any way affiliated with Nous.  This citation is solely to indicate that the code
 curently found in Nous is the result of working through Michael's "Functional Structures in Scala" video playlist and the code examples
-here presents therein.
+presented therein.
 
 Structures itself is based heavily on Scalaz, so both licenses appear below (and must be retained for proper attribution 
 when redestributing any portion of Nous).
@@ -14,7 +14,8 @@ when redestributing any portion of Nous).
 Information contained in the Nous wiki is (unless otherwise stated) the work of Timothy Perrigo, though may directly 
 (in the form of direct quotations with proper citation) or indirectly (in the form of links to resources for additional information) 
 reference other sources. Every attempt at proper attribution will be made; if a citation to a specific source is missing, 
-please notify the author of the Nous wiki (Timothy Perrigo) so that it can be immediately rectified.
+please notify the author of the Nous wiki (Timothy Perrigo) by opening an issue so that it can be 
+immediately rectified.
 
 Redistribution of the Nous wiki, in full or part, is permitted provided the following conditions are met:
 1. The author of the Nous wiki (Timothy Perrigo) is properly cited.
