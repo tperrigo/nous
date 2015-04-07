@@ -1,3 +1,5 @@
+package nous.core 
+
 import simulacrum._
 
 @typeclass trait Functor[F[_]] { self => 

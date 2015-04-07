@@ -12,9 +12,31 @@ addCompilerPlugin("org.spire-math" % "kind-projector_2.11" % "0.5.2")
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full)
 
+scalacOptions ++= Seq(
+  "-Xfatal-warnings",
+  "-Ywarn-dead-code",
+  "-Ywarn-numeric-widen",
+  "-Ywarn-value-discard",
+  "-encoding", "UTF-8",
+  "-feature",
+  "-language:higherKinds",
+  "-language:implicitConversions",
+  "-deprecation",
+  "-unchecked",
+  "-Xcheckinit",
+  "-Xlint",
+  "-Xverify",
+  "-Xfuture",
+  "-Yclosure-elim",
+  "-Yinline",
+  "-Yno-adapted-args"
+)
+
+
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
-  "com.github.mpilquist" %% "simulacrum" % "0.3.0"
+  "com.github.mpilquist" %% "simulacrum" % "0.3.0",
+  "org.scalacheck" %% "scalacheck" % "1.12.2"
 )
 
 
