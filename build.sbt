@@ -34,7 +34,7 @@ scalacOptions ++= Seq(
 
 
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
+//"org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
   "com.github.mpilquist" %% "simulacrum" % "0.3.0",
   "org.scalacheck" %% "scalacheck" % "1.12.2"
 )

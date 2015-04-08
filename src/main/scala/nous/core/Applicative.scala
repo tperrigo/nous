@@ -1,4 +1,5 @@
-package nous.core
+package nous
+package core
 
 import simulacrum._
 
@@ -94,7 +95,7 @@ object Applicative {
       a <- fa
       f <- ff
     } yield f(a)
-
+  }
 
 // Doesn't work-- the iteration using zip stops at the smaller of the 2 lists, so in cases such as:
 // Applicative[List].map(List(1, 2, 3))(_ + 1)
@@ -103,27 +104,4 @@ object Applicative {
 // This is an example of the importance for defining and adhering to the laws of the typeclass
 //    def apply[A, B](fa: List[A])(ff: List[A => B]): List[B] = 
 //      (fa zip ff).map { case (a, f) => f(a) }
-  }
-
-// Still not sure where the =?= operator or the isEq import are defined...doesn't seem to be part of Structures (though there is an isEqual
-// case class in structures.laws)
-  trait ApplicativeLaws[F[_]] {
-    import Applicative.ops._
-//    import isEq._
-
-    implicit def F: Applicative[F]
-
-    def applicativeIdentity[A](fa: F[A]) =
-      fa.apply(F.pure((a: A) => a)) == fa
-
-    // function application distributes over apply and pure
-    def applicativeHomomorphism[A, B](a: A, f: A => B) = 
-      F.pure(a).apply(F.pure(f)) == F.pure(f(a))
-
-    // rhs: create an anonymous function f, apply it to return a b, and then lift the result into the F type constructor
-    // so we can apply it to ff
-    // NOTE: code example from the video did not have to specify f's type explicitly (possible scalac parameter difference?)
-    def applicativeInterchange[A, B](a: A, ff: F[A => B]) =
-      F.pure(a).apply(ff) == ff.apply(F.pure((f: (A => B)) => f(a)))
-  }
 }
