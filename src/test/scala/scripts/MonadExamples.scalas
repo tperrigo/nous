@@ -1,0 +1,10 @@
+import nous.core._
+
+// for each x in the input list, put x (quantity) x's (value) into the result list:
+Monad[List].flatMap(List(1,2,3))(x => List.fill(x)(x)) // --> List[Int] = List(1, 2, 2, 3, 3, 3)
+
+Monad[Option].flatMap(Option(1))(x => if (x > 0) Some(x) else None) // -> Some(1)
+
+Monad[Option].flatMap(None: Option[Int])(x => if (x > 0) Some(x) else None) // --> None
+
+Monad[Option].flatMap(Some(-1))(x => if (x > 0) Some(x) else None) // --> None

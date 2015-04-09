@@ -102,6 +102,21 @@ object Applicative {
 // we only have 1 function (the increment function), so we would only get a List with 1 element back:
 // Applicative[List].map(List(1, 2, 3))(_ + 1) --> List[Int] = List(2)
 // This is an example of the importance for defining and adhering to the laws of the typeclass
+// (fails the applicative identity test)
 //    def apply[A, B](fa: List[A])(ff: List[A => B]): List[B] = 
 //      (fa zip ff).map { case (a, f) => f(a) }
+
+
+  // if we had used the same version of pure as List (i.e, creating a singleton stream),
+  // it would (like list) fail the applicative identity test.
+  // the definition below is lawful (and is equivalent to Haskel's alternate list applicative implementation),
+  // but testing it results in trying to zip an infinite stream, so without some way
+  // to put an upper-bound on the stream size (using scalacheck somehow),
+  // we'll just comment out the stream applicative test in the ApplicativeInstanceTest.
+  implicit val streamApplicative: Applicative[Stream] = new Applicative[Stream] {
+    def pure[A](a: A): Stream[A] = Stream.continually(a)
+
+    def apply[A, B](fa: Stream[A])(ff: Stream[A => B]): Stream[B] =
+      (fa zip ff) map { case (a, f) => f(a) }
+  }
 }
