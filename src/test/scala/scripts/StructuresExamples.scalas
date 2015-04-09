@@ -1,0 +1,34 @@
+// if running sbt for Structures, switch to the coreJVM project (project coreJVM), and start a console; it will automatically import the following:
+import structures._
+import structures.std._
+import structures.ops._
+
+List(1, 2, 3).as(0) // --> List(0, 0, 0)
+
+List(1, 2, 3).void // --> List((), (), ())
+
+Option(1).void // --> Option[Unit] = Some(())
+
+// semigroup associative binary operation
+List(1, 2, 3) |+| List(4, 5, 6) --> List[Int] = List(1, 2, 3, 4, 5, 6)
+
+// works with Int as well (integer addition)
+2 |+| 3 // --> Int: 5
+
+Option(1) |+| Option(2) // --> Option[Int] = Some(3)
+
+Option(1) |+| None // --> Some(1)
+
+(None: Option[Int]) |+| Option(2) // --> Some(2)
+
+// doesn't work with Sets-- Structures currently does not support Sets
+// union of keys, and when there was a key collision ("even"), the values were unioned
+Map("even" -> List(2, 4, 6, 8)) |+| Map("even" -> List(10, 12), "odd" -> List(1, 3, 5)) // --> Map(even -> List(2, 4, 6, 8, 10, 12), odd -> List(1, 3, 5))
+
+Option(Map("even" -> List(2, 4, 6, 8))) |+| Option(Map("even" -> List(10, 12), ("odd" -> List(1, 3, 5)))) // --> Some(Map(even -> List(2, 4, 6, 8, 10, 12), odd -> List(1, 3, 5)))
+
+// union the maps, and when the "a" key conflicts, use the semigroup add for Ints to union the values (i.e, integer addition)
+Map("a" -> 1, "b" -> 2) |+| Map("a" -> 3, "c" -> 4) // --> Map(a -> 4, b -> 2, c -> 4)
+
+// using type classes to adhere to the interface segregation principle, providing minimal behavior, and structuring code to get free instances of type classes
+// Allows behavior to be uniformly implemented (in a law-abiding way) across any inheritence or type hierarchies.
