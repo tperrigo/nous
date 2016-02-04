@@ -1,0 +1,46 @@
+// parametricity (introducing type parameters) does not lead to over-generalizing; without parametricity, the code is often
+// over-generalized, leaving too many possibilities open and making it impossible to reason about algebraically.  
+// By introducing parameter, we're not enabling code reuse, but limiting the amount of data we need to keep in our head to understand a particular function.
+// More about modularity and correctness than generalization for code reuse.
+
+// Foldable is a "lawless" typeclass.  Structures doesn't define any algebraic laws, but certain consistency laws can be defined 
+// (e.g, we want foldLeft and foldRight to be "mirrors" of each other, not behave completely differently).  With Functor.map,
+// the laws (identity and composition) limit the ways in which map can be implemented (which allows for derived methods to be created, taking advantage of the reasononing)
+// provided by the laws.
+
+// Note about Foldable: if Foldable were defined in a way such that the only abstract method was:
+// def toStream[A](fa: F[A]): Stream[A]
+// then _all_ of the other operations in foldable could be implemented as derivatives as toStream.  Foldable exists solely to provide access to the
+// behavior it encapsulates.  If we add additional constraints to Foldable, however, we can define something which we can reason about:  Traverse
+// (note: Traversable taken by Scala standard libraries)
+
+// Traverse is a constrained version of Functor with Foldable, with the addition of a "flatMap-like" method:
+// def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+// def flatMap[A, B]                    (fa: F[A])(f: A => F[B]): F[B]
+// With traverse, we applying the function f A =>G[B] (different type constructor), to somehow 'distribute' G across F.
+
+// sequence:
+// def sequence[G[_]: Applicative, A](fga: F[G[A]]): G[F[A]] =
+//   traverse(fga)(identity) // flip from (eg) a List of Options of some type, to an Option of a List of some type:
+
+val xs = List(Option(1), Option(2), Option(3)) // --> xs: List[Option[Int]] = List(Some(1), Some(2), Some(3))
+
+xs.sequence // --> Option[List[Int]] = Some(List(1, 2, 3))
+
+val nums = (1 to 5).toList
+nums.traverse { n => Option(n) } // --> Option[List[Int]] = Some(List(1, 2, 3, 4, 5))
+// not the most efficient way to wrap values in a list in an Option, but if this were doing some sort of validation, any None encountered
+// would result in a None for the whole thing; e.g:
+nums.traverse { n => if (n > 3) None else Some(n) } // --> Option[List[Int]] = None
+
+// very common with Futures...even the Scala Future has "traverse" and sequence methods on the Future companion object.
+// Something on an indictment against the standard libraries design in terms of reusability.  A standard library defined from the ground-up in terms
+// of typeclasses (i.e, utilizing parametricity) would be much more powerful and reusable.  (cf, Scala's Future.sequence method only works with the TraversableOnce type constructor)
+
+// example of sending messages using List of symbols:
+val messages = List('foo, 'bar, 'baz) // --> List[Symbol] = List('foo, 'bar, 'baz)
+
+messages.map { msg => (myActor ? msg).mapTo[Response] }.sequence // map + sequence (list of futures and transform to a future of lists) == traverse:
+
+messages.traverse { msg => (myActor ? msg).mapTo[Response] } // --> Future[List[Response]]
+

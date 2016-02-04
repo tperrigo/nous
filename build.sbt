@@ -29,14 +29,10 @@ scalacOptions ++= Seq(
   "-Xfuture",
   "-Yclosure-elim",
   "-Yinline",
-  "-Yno-adapted-args"
-)
-
+  "-Yno-adapted-args")
 
 libraryDependencies ++= Seq(
-//"org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
   "com.github.mpilquist" %% "simulacrum" % "0.3.0",
-  "org.scalacheck" %% "scalacheck" % "1.12.2"
-)
-
+  "org.scalacheck" %% "scalacheck" % "1.12.2",
+  "org.typelevel" %% "discipline" % "0.2.1")
 

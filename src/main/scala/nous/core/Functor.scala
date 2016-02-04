@@ -33,14 +33,13 @@ object Functor {
 
   // Functors are type constructors of 1 argument, but Function1 is a type constructor
   // with 2 type parameters.  We need to partially apply 1 type to the Function1 type constructor.
-  /**
-   * implicit def function1Functor[X]: Functor[X => ?] = new Functor[X => ?] {
-   * def map[A, B](fa: X => A)(f: A => B): X => B = fa andThen f
-   * }
-   */
-  implicit def function1Functor[X]() = new Functor[({ type λ[α] = Function1[X, α] })#λ] {
+  implicit def function1Functor[X]: Functor[X => ?] = new Functor[X => ?] {
     def map[A, B](fa: X => A)(f: A => B): X => B = fa andThen f
   }
+
+  //  implicit def function1Functor[X]() = new Functor[({ type λ[α] = Function1[X, α] })#λ] {
+  //    def map[A, B](fa: X => A)(f: A => B): X => B = fa andThen f
+  //  }
 
 }
 

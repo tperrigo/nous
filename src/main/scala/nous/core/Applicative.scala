@@ -8,7 +8,7 @@ import simulacrum._
   // lift a value into a context (into an "effect system")
   // using type constructors to model an "effect": something visible through all type signatures by the presence of type constructor F
   // (e.g, Option has the effect of having a value or not having a value; List has the effect of having no values or many values)
-  def pure[A](a : A): F[A]
+  def pure[A](a: A): F[A]
 
   // similar to map, but takes a function which exists in the context (effect system)
   // a more general version of map (Applicatives are generalized Functors)
@@ -29,7 +29,7 @@ import simulacrum._
   // partially applying f with b (f(_, b)) yields a z, so f(_, b) = A => Z
   // by mapping over an F[B], the result is an F[A => Z];
   // when we apply this to an F[A] (fa), we get back an F[Z]
-  def map2[A, B, Z](fa: F[A], fb: F[B])(f: (A, B) => Z): F[Z] = 
+  def map2[A, B, Z](fa: F[A], fb: F[B])(f: (A, B) => Z): F[Z] =
     apply(fa)(map(fb)(b => f(_, b)))
 
   // map2 over fb, fc (takes a function (B, C), returns a function from a => z (since f(a,b,c) => z)), in the context F[A => Z],
@@ -64,7 +64,7 @@ import simulacrum._
   // Like Functors, Applicatives are composable:
   def compose[G[_]](implicit G: Applicative[G]): Applicative[Lambda[X => F[G[X]]]] =
     new Applicative[Lambda[X => F[G[X]]]] {
-      def pure[A](a : A): F[G[A]] = self.pure(G.pure(a))
+      def pure[A](a: A): F[G[A]] = self.pure(G.pure(a))
 
       def apply[A, B](fga: F[G[A]])(ff: F[G[A => B]]): F[G[B]] = {
         // Distribute G over the function A => B (convert G[A => B] to G[A] => G[B])
@@ -75,7 +75,6 @@ import simulacrum._
       }
     }
 }
-
 
 object Applicative {
   implicit val optionApplicative: Applicative[Option] = new Applicative[Option] {
@@ -97,15 +96,15 @@ object Applicative {
     } yield f(a)
   }
 
-// Doesn't work-- the iteration using zip stops at the smaller of the 2 lists, so in cases such as:
-// Applicative[List].map(List(1, 2, 3))(_ + 1)
-// we only have 1 function (the increment function), so we would only get a List with 1 element back:
-// Applicative[List].map(List(1, 2, 3))(_ + 1) --> List[Int] = List(2)
-// This is an example of the importance for defining and adhering to the laws of the typeclass
-// (fails the applicative identity test)
-//    def apply[A, B](fa: List[A])(ff: List[A => B]): List[B] = 
-//      (fa zip ff).map { case (a, f) => f(a) }
-
+  // pairwise zip the lists and then map over the results--
+  // Doesn't work-- the iteration using zip stops at the smaller of the 2 lists, so in cases such as:
+  // Applicative[List].map(List(1, 2, 3))(_ + 1)
+  // we only have 1 function (the increment function), so we would only get a List with 1 element back:
+  // Applicative[List].map(List(1, 2, 3))(_ + 1) --> List[Int] = List(2)
+  // This is an example of the importance for defining and adhering to the laws of the typeclass
+  // (fails the applicative identity test)
+  //    def apply[A, B](fa: List[A])(ff: List[A => B]): List[B] = 
+  //      (fa zip ff).map { case (a, f) => f(a) }
 
   // if we had used the same version of pure as List (i.e, creating a singleton stream),
   // it would (like list) fail the applicative identity test.
