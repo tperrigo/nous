@@ -1,8 +1,9 @@
 /**
-Equals type class (code is directly from structures.Equal, but without the contravariantInstance.
-Added to nous to create a minimal set of type classes for educational purposes).
-**/
-package nous.core
+ * Equals type class (code is directly from structures.Equal, but without the contravariantInstance.
+ * Added to nous to create a minimal set of type classes for educational purposes).
+ */
+package nous
+package core
 
 import simulacrum.{ typeclass, op }
 

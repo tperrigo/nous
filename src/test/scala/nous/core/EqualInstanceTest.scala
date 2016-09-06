@@ -7,8 +7,7 @@ import Arbitrary.arbitrary
 import nous.core.std._
 import nous.laws._
 
-abstract class EqualInstanceTest[A](name: String)(implicit E: Equal[A],
-  arbInt: Arbitrary[Int]) extends Properties(s"EqualInstanceTest[$name]") {
+abstract class EqualInstanceTest[A](name: String)(implicit E: Equal[A], arbInt: Arbitrary[Int]) extends Properties(s"EqualInstanceTest[$name]") {
 
   val laws = EqualLaws[A]
 
