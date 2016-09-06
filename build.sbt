@@ -20,6 +20,7 @@ scalacOptions ++= Seq(
   "-encoding", "UTF-8",
   "-feature",
   "-language:higherKinds",
+  "-language:postfixOps",
   "-language:implicitConversions",
   "-deprecation",
   "-unchecked",
@@ -34,5 +35,6 @@ scalacOptions ++= Seq(
 libraryDependencies ++= Seq(
   "com.github.mpilquist" %% "simulacrum" % "0.7.0",
   "org.scalacheck" %% "scalacheck" % "1.13.0",
+  "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "org.typelevel" %% "discipline" % "0.5")
 
