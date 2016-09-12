@@ -21,6 +21,12 @@ object RandomStuff extends App {
   val ys = for (i <- 0 to 9) yield Random.nextInt(10)
   println(ys)
 
+  // generating a random int within an exclusive range [min max]
+  def nextInt(min: Int, max: Int): Int = Random.nextInt((max - min) + 1) + min
+  println(s"random int within range [1 5] = ${nextInt(1, 5)}")
+  println(s"random int within range [1 5] = ${nextInt(1, 5)}")
+  println(s"random int within range [1 5] = ${nextInt(1, 5)}")
+
   // Testing that an event which should occur randomly x% of the time in fact does occur that often.
   // From: http://blog.jessitron.com/2013/08/a-trick-for-deterministic-testing-of.html
   // This could be useful for testing various selection strategies.
